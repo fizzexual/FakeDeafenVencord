@@ -33,7 +33,8 @@ cd Vencord
 pnpm install --frozen-lockfile
 ```
 
-- `pnpm install --frozen-lockfile` | This command installs all the required needed packages for Vencord to run. `--frozen-lockfile`, prevents it from updating the lockfile.
+- `pnpm install --frozen-lockfile` | This command installs all the required needed packages for Vencord to run. 
+`--frozen-lockfile`, prevents it from updating the lockfile.
 
 -------  
 ㅤ
