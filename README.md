@@ -1,33 +1,45 @@
-# Fake Deafen - Vencord Plugin
+# 🎧 Fake Deafen
 
-A Vencord plugin that allows you to appear deafened to others while still being able to hear them.
+> Appear deafened in Discord voice channels while still hearing everyone
 
-## Features
+A lightweight Vencord plugin that lets you fake being deafened - you'll show as deafened to others, but you can still hear everything in the voice channel.
 
-- 🎧 Appear deafened to other users
-- 👂 Continue hearing audio from voice channels
-- ⚡ Simple `/fd` command to toggle
-- ⚙️ Customizable settings for mute behavior
+## ✨ Features
 
-## Installation
+- 🔇 **Appear Deafened** - Others see you as deafened
+- 👂 **Still Hear Everything** - Your audio stays active locally
+- ⚡ **Quick Toggle** - Simple `/fd` command
+- ⚙️ **Customizable** - Control mute behavior with settings
+- 🪶 **Lightweight** - Minimal performance impact
+
+## 📦 Installation
 
 ### Prerequisites
-- [Vencord](https://vencord.dev/) must be installed and built from source
 
-### Steps
+You need [Vencord](https://vencord.dev/) built from source. If you haven't done this yet:
 
-1. Clone the Vencord repository if you haven't already:
+```bash
+# Clone Vencord
+git clone https://github.com/Vendicated/Vencord
+cd Vencord
+
+# Install dependencies
+pnpm install --frozen-lockfile
+```
+
+### Install Plugin
+
+1. **Download the plugin file**
    ```bash
-   git clone https://github.com/Vendicated/Vencord
-   cd Vencord
+   # Download fakeDeafen.tsx from this repo
    ```
 
-2. Create the `userplugins` folder if it doesn't exist:
+2. **Create userplugins folder** (if it doesn't exist)
    ```bash
    mkdir src/userplugins
    ```
 
-3. Download `fakeDeafen.tsx` and place it in `src/userplugins/`:
+3. **Copy plugin to userplugins**
    ```bash
    # Windows
    copy fakeDeafen.tsx Vencord\src\userplugins\
@@ -36,71 +48,128 @@ A Vencord plugin that allows you to appear deafened to others while still being 
    cp fakeDeafen.tsx Vencord/src/userplugins/
    ```
 
-4. Install dependencies and build Vencord:
+4. **Build and inject Vencord**
    ```bash
-   pnpm install --frozen-lockfile
    pnpm build
-   ```
-
-5. Inject Vencord into Discord:
-   ```bash
    pnpm inject
    ```
 
-6. Restart Discord and enable the plugin in Settings > Vencord > Plugins
+5. **Enable the plugin**
+   - Restart Discord
+   - Go to Settings → Vencord → Plugins
+   - Find "FakeDeafen" and enable it
 
-## Usage
+## 🚀 Usage
 
-1. Join a voice channel
-2. Type `/fd` in any chat to toggle fake deafen
-3. You'll see a confirmation message:
-   - 🔴 Fake deafen: ON (you appear deafened but can still hear)
-   - ⚪ Fake deafen: OFF (normal deafen behavior)
+### Basic Usage
 
-## Settings
+1. Join any voice channel
+2. Type `/fd` in any text channel
+3. Toggle fake deafen on/off
 
-Access plugin settings in Vencord Settings > Plugins > FakeDeafen:
+### Status Messages
 
-- **Keep mute state when fake deafened**: Maintain your mute status while fake deafened (default: true)
-- **Send deafen state to server**: Send deafen status to Discord servers (default: true)
+- 🔴 **Fake deafen: ON** - You appear deafened but can hear
+- ⚪ **Fake deafen: OFF** - Normal behavior
 
-## How It Works
+> **Note:** Only you can see these status messages
 
-The plugin patches Discord's `voiceStateUpdate` function to intercept deafen state changes:
-1. When fake deafen is enabled, it sends the deafen state to Discord's servers
-2. Your client appears deafened to others
-3. Locally, your audio streams remain active so you can still hear
+## ⚙️ Settings
 
-## Warning
+Configure the plugin in **Settings → Vencord → Plugins → FakeDeafen**:
 
-⚠️ **Important Notice:**
-- This plugin modifies Discord's client behavior
-- Using client modifications may violate [Discord's Terms of Service](https://discord.com/terms)
-- Use at your own risk
-- This is for educational purposes only
-- Your account could be banned for using modified clients
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Keep mute state** | Maintain your mute status while fake deafened | ✅ Enabled |
+| **Send deafen state** | Send deafen status to Discord servers | ✅ Enabled |
 
-## Troubleshooting
+## 🔧 How It Works
 
-**Plugin doesn't show up:**
-- Make sure you placed the file in `src/userplugins/` (not `src/plugins/`)
-- Rebuild Vencord with `pnpm build`
-- Restart Discord
+The plugin patches Discord's `voiceStateUpdate` function:
 
-**Command doesn't work:**
-- Ensure the plugin is enabled in Vencord settings
-- Check the console (Ctrl+Shift+I) for errors
-- Try reloading Discord (Ctrl+R)
+1. **Server Side** - Sends deafen state to Discord (you appear deafened)
+2. **Client Side** - Keeps your audio streams active (you can still hear)
+3. **Result** - Others see you as deafened, but you hear everything
 
-**Can't hear audio:**
-- Toggle fake deafen off and on again
-- Check your audio output settings
+```
+Normal Deafen:  Server ✅ Deafened | Client ✅ Deafened
+Fake Deafen:    Server ✅ Deafened | Client ❌ Not Deafened
+```
+
+## 🐛 Troubleshooting
+
+<details>
+<summary><b>Plugin doesn't show up in Vencord settings</b></summary>
+
+- Verify file is in `src/userplugins/` (not `src/plugins/`)
+- Rebuild Vencord: `pnpm build`
+- Restart Discord completely
+- Check console for errors: `Ctrl+Shift+I`
+</details>
+
+<details>
+<summary><b>/fd command doesn't work</b></summary>
+
+- Make sure plugin is enabled in Vencord settings
+- Try reloading Discord: `Ctrl+R`
+- Check if you're in a voice channel
+- Look for errors in console: `Ctrl+Shift+I`
+</details>
+
+<details>
+<summary><b>Can't hear audio when fake deafened</b></summary>
+
+- Toggle fake deafen off and back on
+- Check Discord audio settings
 - Rejoin the voice channel
+- Verify your audio output device is working
+</details>
 
-## License
+<details>
+<summary><b>Build errors</b></summary>
 
-GPL-3.0-or-later - Use at your own risk
+- Make sure you have Node.js and pnpm installed
+- Run `pnpm install --frozen-lockfile` again
+- Check for TypeScript errors in the plugin file
+- Ensure Vencord is up to date: `git pull`
+</details>
 
-## Disclaimer
+## ⚠️ Disclaimer
 
-This project is not affiliated with Discord Inc. or Vencord. Use responsibly and be aware of the risks involved with client modifications.
+**Important:** This plugin modifies Discord's client behavior.
+
+- ❌ Using client modifications may violate [Discord's Terms of Service](https://discord.com/terms)
+- ⚠️ Your account could be suspended or banned
+- 🎓 This project is for **educational purposes only**
+- 🔒 Use at your own risk
+
+**Not affiliated with Discord Inc. or Vencord.**
+
+## 📝 License
+
+GPL-3.0-or-later - See [LICENSE](LICENSE) file for details
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+
+- 🐛 Report bugs
+- 💡 Suggest features
+- 🔧 Submit pull requests
+- ⭐ Star the repo if you find it useful
+
+## 📚 Resources
+
+- [Vencord Documentation](https://docs.vencord.dev/)
+- [Vencord GitHub](https://github.com/Vendicated/Vencord)
+- [Discord Developer Portal](https://discord.com/developers/docs)
+
+---
+
+<div align="center">
+
+**Made with ❤️ for the Discord community**
+
+[Report Bug](https://github.com/fizzexual/FakeDeafenVencord/issues) · [Request Feature](https://github.com/fizzexual/FakeDeafenVencord/issues)
+
+</div>
