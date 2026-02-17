@@ -624,6 +624,8 @@ See [LICENSE](LICENSE) file for full details.
 
 **Made with ❤️ for the Discord community**
 
+**For support: lauzezzif** 
+
 [⬆ Back to Top](#-fake-deafen)
 
 </div>
