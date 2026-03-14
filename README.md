@@ -552,7 +552,7 @@ Contributions are welcome and appreciated! Here's how you can help:
 
 ```bash
 # Fork and clone the repo
-git clone https://github.com/YOUR_USERNAME/FakeDeafenVencord.git
+git clone https://github.com/fizzexual/FakeDeafenVencord.git
 cd FakeDeafenVencord
 
 # Make your changes to fakeDeafen.tsx
