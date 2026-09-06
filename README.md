@@ -10,6 +10,8 @@
 
 A lightweight Vencord plugin that allows you to appear deafened in Discord voice channels while maintaining full audio reception. Perfect for privacy-conscious users who want to listen without broadcasting their listening status.
 
+**✅ Last verified: 6 September 2026** against the current Discord client build and Vencord `main` (30 August 2026).
+
 [Installation](#-installation) • [Usage](#-usage) • [Features](#-features) • [Troubleshooting](#-troubleshooting)
 
 </div>
@@ -93,10 +95,12 @@ The plugin patches the `voiceStateUpdate` function to modify the behavior of the
 | **You Can Hear** | ❌ No | ✅ Yes |
 
 **Key Mechanism:**
-1. Intercepts the `self_deaf` parameter in voice state updates
-2. Sends `true` to Discord servers (you appear deafened)
-3. Prevents local audio stream disconnection
-4. Maintains full audio reception on your client
+1. Patches the gateway socket's `voiceStateUpdate` method, which is the single place Discord builds the `VOICE_STATE_UPDATE` payload
+2. While fake deafen is on, rewrites `self_mute` / `self_deaf` to `true` right before the payload is sent, so the server (and everyone else) sees you as deafened
+3. Remembers the last real voice state Discord tried to send. `/fd` re-sends that state through the patched method, so the change applies instantly without clicking the deafen button or touching your local audio
+4. Your client never actually deafens, so you keep hearing everything
+
+> The old version toggled the real deafen button twice via the DOM. That relied on the button's `aria-label` and left you actually deafened when the label changed, which is why it broke. The new approach does not touch the UI at all.
 
 ---
 
@@ -108,8 +112,8 @@ Before installing Fake Deafen, ensure you have the following:
 
 | Software | Version | Purpose | Download |
 |----------|---------|---------|----------|
-| **Node.js** | v18+ | JavaScript runtime | [nodejs.org](https://nodejs.org/) |
-| **pnpm** | Latest | Package manager | [pnpm.io](https://pnpm.io/) |
+| **Node.js** | v22+ | JavaScript runtime (required by current Vencord) | [nodejs.org](https://nodejs.org/) |
+| **pnpm** | v11+ | Package manager | [pnpm.io](https://pnpm.io/) |
 | **Git** | Latest | Version control | [git-scm.com](https://git-scm.com/) |
 | **Vencord** | Source | Discord client mod | [vencord.dev](https://vencord.dev/) |
 
@@ -258,39 +262,33 @@ Access plugin settings in **Discord Settings → Vencord → Plugins → FakeDea
 
 ### Available Settings
 
-#### Keep Mute State When Fake Deafened
+#### Appear muted to others while fake deafened
 
 ```
 Type: Boolean
 Default: ✅ Enabled
 ```
 
-**Description:** Maintains your microphone mute status while fake deafened.
+**Description:** While fake deafen is on, the server is told you are muted, regardless of your real mic state.
 
-- **Enabled:** Your mute state is preserved (recommended)
-- **Disabled:** Mute state may change when toggling fake deafen
-
-**When to use:**
-- ✅ Keep enabled if you want consistent mute behavior
-- ❌ Disable if you want independent mute control
+- **Enabled:** Others see you as muted (a deafened user is always shown muted on Discord, so this looks natural)
+- **Disabled:** Your real mute state is sent. You will show as deafened but not muted, which looks unusual
 
 ---
 
-#### Send Deafen State to Server
+#### Appear deafened to others while fake deafened
 
 ```
 Type: Boolean
 Default: ✅ Enabled
 ```
 
-**Description:** Controls whether the deafen state is sent to Discord servers.
+**Description:** While fake deafen is on, the server is told you are deafened, regardless of your real state.
 
-- **Enabled:** You appear deafened to others (normal operation)
-- **Disabled:** Experimental - may cause unexpected behavior
+- **Enabled:** Others see you as deafened (normal operation)
+- **Disabled:** Your real deafen state is sent. Combine with the mute option above to fake only a mute
 
-**When to use:**
-- ✅ Keep enabled for normal fake deafen operation
-- ⚠️ Only disable for testing purposes
+> Changing a setting while `/fd` is already on takes effect the next time a voice state is sent. Run `/fd` twice to push it immediately.
 
 ---
 
@@ -351,7 +349,7 @@ Default: ✅ Enabled
    - Find "FakeDeafen" and ensure it's toggled ON
 
 2. **Join a voice channel first:**
-   - The command only works when connected to voice
+   - If you run `/fd` while not in voice, it replies "Not in a voice channel right now". The toggle is still remembered and applies as soon as you join
 
 3. **Try reloading Discord:**
    - Press `Ctrl+R` (Windows/Linux) or `Cmd+R` (Mac)
@@ -413,7 +411,7 @@ Default: ✅ Enabled
 2. **Check Node.js version:**
    ```bash
    node --version
-   # Should be v18 or higher
+   # Should be v22 or higher (current Vencord requires it)
    ```
 
 3. **Verify plugin file integrity:**
@@ -476,7 +474,7 @@ A: The plugin may break with major Discord updates. Check this repo for updates 
 A: Muting audio still shows you as listening. Fake deafen shows you as deafened (not listening) while you actually are.
 
 **Q: Does this affect my microphone?**  
-A: No. Your microphone state is independent and controlled by the "Keep mute state" setting.
+A: No. Your real microphone keeps working. What others see is controlled by the "Appear muted to others" setting.
 
 **Q: Can I use this with other Vencord plugins?**  
 A: Yes. Fake Deafen is compatible with other Vencord plugins.
