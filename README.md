@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎧 Fake Deafen
+# 🎧 Fake Deafen 🍂
 
 ### *Appear deafened while still hearing everything*
 
@@ -17,6 +17,10 @@ A lightweight Vencord plugin that allows you to appear deafened in Discord voice
 </div>
 
 ---
+
+## About
+
+Fake Deafen is a single-file Vencord userplugin for Discord users who want to show as deafened in a voice channel while still hearing the call. It is a small, just-for-fun plugin toggled with the `/fd` command. It works on the current Discord client and Vencord `main`, and is installed by building Vencord from source with the plugin added.
 
 ## 📋 Table of Contents
 
